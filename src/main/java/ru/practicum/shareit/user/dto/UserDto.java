@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -7,14 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.utils.Create;
+import ru.practicum.shareit.utils.Update;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-/**
- * TODO Sprint add-controllers.
- */
 
 @Getter
 @Setter
@@ -22,14 +19,11 @@ import javax.validation.constraints.Size;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto {
+public class UserDto {
     private Long id;
     @NotBlank(groups = {Create.class})
     private String name;
-    @Size(max = 200)
-    @NotBlank(groups = {Create.class})
-    private String description;
+    @Email(groups = {Create.class, Update.class})
     @NotNull(groups = {Create.class})
-    private Boolean available;
-    private Long request;
+    private String email;
 }

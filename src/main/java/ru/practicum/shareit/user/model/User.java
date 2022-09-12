@@ -1,16 +1,14 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.user.model;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.Future;
-import java.time.LocalDate;
-
 /**
- * TODO Sprint add-bookings.
+ * TODO Sprint add-controllers.
  */
 
 @Getter
@@ -18,9 +16,9 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public class Booking {
+@AllArgsConstructor
+public class User {
     private Long id;
-    private Long itemId;
-    @Future
-    private LocalDate date;
+    private String name;
+    private String email;
 }
