@@ -47,7 +47,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleOtherException(final OtherException e) {
+    public ResponseEntity<String> handleOtherException(final Throwable e) {
         log.debug("OtherException");
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -16,7 +16,6 @@ import ru.practicum.shareit.utils.Create;
 import ru.practicum.shareit.utils.Update;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * TODO Sprint add-controllers.
@@ -40,7 +39,7 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> getAllUsers() {
-        return userService.getAllUsers().stream().map(userMapper::mapToUserDto).collect(Collectors.toList());
+        return userMapper.mapToListUserDto(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
