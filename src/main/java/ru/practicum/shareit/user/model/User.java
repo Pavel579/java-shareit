@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 /**
  * TODO Sprint add-controllers.
  */
@@ -20,15 +17,8 @@ import javax.validation.constraints.NotBlank;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Cloneable {
+public class User {
     private Long id;
-    @NotBlank
     private String name;
-    @Email
     private String email;
-
-    @Override
-    public User clone() throws CloneNotSupportedException {
-        return (User) super.clone();
-    }
 }

@@ -1,6 +1,8 @@
 package ru.practicum.shareit.user.storage;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -8,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static ru.practicum.shareit.utils.Utils.getNullPropertyNames;
 
 @Repository
 public class InMemoryUserStorage implements UserStorage {
@@ -31,9 +35,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User updateUserById(User user) {
-        userStorage.put(user.getId(), user);
-        return user;
+    public User updateUserById(UserDto userDto, User userFromStorage) {
+        BeanUtils.copyProperties(userDto, userFromStorage, getNullPropertyNames(userDto));
+        return userFromStorage;
     }
 
     @Override

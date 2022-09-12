@@ -12,7 +12,7 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    User updateUserById(Long id, UserDto userDto) throws CloneNotSupportedException;
+    User updateUserById(Long id, UserDto userDto);
 
     void deleteUserById(Long id);
 

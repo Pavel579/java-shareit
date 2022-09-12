@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.utils.Create;
+import ru.practicum.shareit.utils.Update;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+    public UserDto createUser(@Validated(Create.class) @RequestBody UserDto userDto) {
         return userMapper.mapToUserDto(userService.createUser(userMapper.mapToUser(userDto)));
     }
 
@@ -48,7 +50,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public UserDto updateUserById(@PathVariable Long id,
-                                  @RequestBody UserDto userDto) throws CloneNotSupportedException {
+                                  @Validated(Update.class) @RequestBody UserDto userDto) {
         return userMapper.mapToUserDto(userService.updateUserById(id, userDto));
     }
 

@@ -1,10 +1,13 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
-@Service
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
 public class ItemMapper {
     public ItemDto mapToItemDto(Item item) {
         return new ItemDto(
@@ -24,5 +27,9 @@ public class ItemMapper {
                 id,
                 null
         );
+    }
+
+    public List<ItemDto> mapToListItemDto(List<Item> items) {
+        return items.stream().map(this::mapToItemDto).collect(Collectors.toList());
     }
 }

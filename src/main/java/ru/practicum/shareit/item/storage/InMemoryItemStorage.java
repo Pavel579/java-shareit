@@ -1,31 +1,38 @@
 package ru.practicum.shareit.item.storage;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.practicum.shareit.utils.Utils.getNullPropertyNames;
+
 @Repository
 public class InMemoryItemStorage implements ItemStorage {
     private static Long id = 0L;
     private final Map<Long, Item> itemStorage = new HashMap<>();
+    private final Map<Long, List<Item>> userItemIndex = new LinkedHashMap<>();
 
     @Override
     public Item createItem(Item item) {
         item.setId(setIdToItem());
         itemStorage.put(item.getId(), item);
+        addUserItemIndex(item);
         return item;
     }
 
     @Override
-    public Item updateItem(Item item) {
-        itemStorage.put(item.getId(), item);
-        return item;
+    public Item updateItem(ItemDto itemDto, Item itemFromStorage) {
+        BeanUtils.copyProperties(itemDto, itemFromStorage, getNullPropertyNames(itemDto));
+        return itemFromStorage;
     }
 
     @Override
@@ -35,9 +42,7 @@ public class InMemoryItemStorage implements ItemStorage {
 
     @Override
     public List<Item> getAllItemsOfUser(Long id) {
-        return new ArrayList<>(itemStorage.values()).stream()
-                .filter(item -> item.getOwner().equals(id))
-                .collect(Collectors.toList());
+        return userItemIndex.get(id);
     }
 
     @Override
@@ -50,5 +55,11 @@ public class InMemoryItemStorage implements ItemStorage {
 
     private Long setIdToItem() {
         return ++id;
+    }
+
+    private void addUserItemIndex(Item item) {
+        List<Item> items = userItemIndex.computeIfAbsent(item.getOwner(), k -> new ArrayList<>());
+        items.add(item);
+        userItemIndex.put(item.getOwner(), items);
     }
 }

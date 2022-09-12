@@ -6,9 +6,9 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemService {
-    Item createItem(Long id, ItemDto itemDto);
+    Item createItem(Long id, Item item);
 
-    Item updateItem(Long id, ItemDto itemDto, Long itemId) throws CloneNotSupportedException;
+    Item updateItem(Long id, ItemDto itemDto, Long itemId);
 
     Item getItemById(Long id);
 

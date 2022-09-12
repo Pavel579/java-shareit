@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.practicum.shareit.utils.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,13 +23,13 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto {
-    Long id;
-    @NotBlank
+    private Long id;
+    @NotBlank(groups = {Create.class})
     private String name;
     @Size(max = 200)
-    @NotNull
+    @NotBlank(groups = {Create.class})
     private String description;
-    @NotNull
+    @NotNull(groups = {Create.class})
     private Boolean available;
     private Long request;
 }
