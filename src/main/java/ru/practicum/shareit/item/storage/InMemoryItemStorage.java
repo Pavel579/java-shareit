@@ -25,7 +25,7 @@ public class InMemoryItemStorage implements ItemStorage {
     public Item createItem(Item item) {
         item.setId(setIdToItem());
         itemStorage.put(item.getId(), item);
-        addUserItemIndex(item);
+        //addUserItemIndex(item);
         return item;
     }
 
@@ -57,9 +57,9 @@ public class InMemoryItemStorage implements ItemStorage {
         return ++id;
     }
 
-    private void addUserItemIndex(Item item) {
+    /*private void addUserItemIndex(Item item) {
         List<Item> items = userItemIndex.computeIfAbsent(item.getOwner(), k -> new ArrayList<>());
         items.add(item);
         userItemIndex.put(item.getOwner(), items);
-    }
+    }*/
 }

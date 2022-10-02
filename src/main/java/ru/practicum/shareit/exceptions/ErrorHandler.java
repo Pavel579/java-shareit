@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Map;
+
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
@@ -57,4 +59,35 @@ public class ErrorHandler {
         log.debug("MethodArgumentNotValidException");
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleBookingNotFoundException(final BookingNotFoundException e) {
+        log.debug("BookingNotFoundException");
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleLackOfRightsToSeeBookingException(final LackOfRightsToSeeBookingException e) {
+        log.debug("LackOfRightsToSeeBookingException");
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleItemIsNotAvailableException(final ItemIsNotAvailableException e) {
+        log.debug("ItemIsNotAvailableException");
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleDatesAreNotCorrectException(final DatesAreNotCorrectException e) {
+        log.debug("DatesAreNotCorrectException");
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> handleIncorrectStateException(final IncorrectStateException e) {
+        log.debug("IncorrectStateException");
+        return new ResponseEntity<>(Map.of("error",e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
 }

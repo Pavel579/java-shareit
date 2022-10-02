@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.storage;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -14,8 +15,9 @@ import java.util.Optional;
 import static ru.practicum.shareit.utils.Utils.getNullPropertyNames;
 
 @Repository
-public class InMemoryUserStorage implements UserStorage {
-    private static Long id = 0L;
+//@Qualifier
+public class InMemoryUserStorage  {
+    /*private static Long id = 0L;
     private final Map<Long, User> userStorage = new HashMap<>();
 
     public User createUser(User user) {
@@ -47,5 +49,5 @@ public class InMemoryUserStorage implements UserStorage {
 
     private Long setIdToUser() {
         return ++id;
-    }
+    }*/
 }

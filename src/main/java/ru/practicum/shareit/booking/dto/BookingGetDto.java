@@ -8,16 +8,10 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Future;
 import java.time.LocalDateTime;
-
-/**
- * TODO Sprint add-bookings.
- */
 
 @Getter
 @Setter
@@ -25,14 +19,14 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingDto {
+public class BookingGetDto {
     private Long id;
-    private Long itemId;
+    private BookingStatus status;
     @Future
     private LocalDateTime start;
     @Future
     private LocalDateTime end;
-
-
+    private Item item;
+    private User booker;
 
 }
