@@ -21,20 +21,20 @@ public class UserServiceImpl implements UserService {
         this.repository = repository;
     }
 
-    public User createUser(User user){
+    public User createUser(User user) {
         repository.save(user);
         return user;
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return repository.findAll();
     }
 
-    public User getUserById(Long id){
+    public User getUserById(Long id) {
         return repository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
     }
 
-    public User updateUserById(Long id, UserDto userDto){
+    public User updateUserById(Long id, UserDto userDto) {
         User userFromStorage = getUserById(id);
         BeanUtils.copyProperties(userDto, userFromStorage, getNullPropertyNames(userDto));
         return repository.save(userFromStorage);

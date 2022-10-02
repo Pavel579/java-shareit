@@ -26,11 +26,10 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
-    private final ItemMapper itemMapper;
 
-    public ItemController(ItemService itemService, ItemMapper itemMapper) {
+
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
-        this.itemMapper = itemMapper;
     }
 
     @PostMapping
@@ -65,7 +64,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public CommentDto createComment(@RequestHeader("X-Sharer-User-Id") Long id,
                                     @PathVariable Long itemId,
-                                    @Validated(Create.class) @RequestBody CommentDto commentDto){
+                                    @Validated(Create.class) @RequestBody CommentDto commentDto) {
         return itemService.createComment(id, itemId, commentDto);
     }
 }
