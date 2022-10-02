@@ -32,32 +32,32 @@ public class BookingController {
 
     @PostMapping
     public BookingDto createNewBooking(@RequestHeader("X-Sharer-User-Id") Long id,
-                                       @Validated @RequestBody BookingDto bookingDto){
+                                       @Validated @RequestBody BookingDto bookingDto) {
         return bookingService.createNewBooking(bookingDto, id);
     }
 
     @PatchMapping("/{bookingId}")
     public BookingGetDto approveBooking(@RequestHeader("X-Sharer-User-Id") Long id,
                                         @PathVariable Long bookingId,
-                                        @RequestParam Boolean approved){
+                                        @RequestParam Boolean approved) {
         return bookingService.approveBooking(id, bookingId, approved);
     }
 
     @GetMapping
     public List<BookingGetDto> getAllBookingsByUserId(@RequestHeader("X-Sharer-User-Id") Long id,
-                                                      @RequestParam(required = false) String state){
+                                                      @RequestParam(required = false) String state) {
         return bookingService.getAllBookingsByUserId(id, state);
     }
 
     @GetMapping("/{bookingId}")
     public BookingGetDto getBookingById(@RequestHeader("X-Sharer-User-Id") Long id,
-                                        @PathVariable Long bookingId){
+                                        @PathVariable Long bookingId) {
         return bookingService.getBookingById(id, bookingId);
     }
 
     @GetMapping("/owner")
     public List<BookingGetDto> getAllBookingsOfCurrentUserItems(@RequestHeader("X-Sharer-User-Id") Long id,
-                                                          @RequestParam(required = false) String state){
+                                                                @RequestParam(required = false) String state) {
         return bookingService.getAllBookingsOfCurrentUserItems(id, state);
     }
 }

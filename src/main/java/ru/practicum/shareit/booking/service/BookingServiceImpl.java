@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -20,7 +19,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +43,7 @@ public class BookingServiceImpl implements BookingService {
         checkDates(bookingDto);
         User user = userService.getUserById(userId);
         Item item = itemService.getItemById(bookingDto.getItemId());
-        if(item.getOwner().getId().equals(userId)){
+        if (item.getOwner().getId().equals(userId)) {
             throw new ItemNotFoundException("Это вещь пользователя");
         }
         if (item.getAvailable()) {
@@ -56,24 +54,6 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    /*@Override
-    public BookingOwnerDto approveBooking(Long userId, Long bookingId, Boolean isApproved) {
-        userService.getUserById(userId);
-        Booking booking = repository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Booking не найден"));
-        Item item = itemService.getItemById(booking.getItemId());
-        if (item.getOwner().equals(userId)) {
-            if (isApproved) {
-                booking.setStatus(BookingStatus.APPROVED);
-            } else {
-                booking.setStatus(BookingStatus.REJECTED);
-            }
-            repository.save(booking);
-            return mapper.mapToBookingOwnerDto(booking, item);
-        } else {
-            throw new LackOfRightsToSeeBookingException("Нет прав для просмотра booking");
-        }
-    }*/
-
     @Override
     public BookingGetDto approveBooking(Long userId, Long bookingId, Boolean isApproved) {
         Booking booking = repository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException("Booking не найден"));
@@ -81,15 +61,15 @@ public class BookingServiceImpl implements BookingService {
         userService.getUserById(userId);
         if (item.getOwner().getId().equals(userId)) {
             if (isApproved) {
-                if (!booking.getStatus().equals(BookingStatus.APPROVED)){
+                if (!booking.getStatus().equals(BookingStatus.APPROVED)) {
                     booking.setStatus(BookingStatus.APPROVED);
-                }else {
+                } else {
                     throw new IncorrectStateException("Already Approved");
                 }
             } else {
-                if (!booking.getStatus().equals(BookingStatus.REJECTED)){
+                if (!booking.getStatus().equals(BookingStatus.REJECTED)) {
                     booking.setStatus(BookingStatus.REJECTED);
-                }else{
+                } else {
                     throw new IncorrectStateException("Already Rejected");
                 }
             }
@@ -147,43 +127,6 @@ public class BookingServiceImpl implements BookingService {
                 .sorted(Comparator.comparing(Booking::getStart).reversed())
                 .collect(Collectors.toList()));
     }
-
-    /*@Override
-    public List<BookingTestDto> getAllBookingsByUserId(Long userId) {
-        userService.getUserById(userId);
-        List<Booking> bookings = new ArrayList<>();
-        //List<Item> items = new ArrayList<>();
-        Map<Booking, Item> bookingsGetMap = new HashMap<>();
-        switch (state) {
-            case "ALL":
-                bookings = repository.findByBookerId(userId);
-                break;
-            case "CURRENT":
-                bookings = repository.findByBookerIdAndStartBeforeAndEndAfter(userId, LocalDateTime.now(), LocalDateTime.now());
-                break;
-            case "**PAST**":
-                bookings = repository.findByBookerIdAndEndBefore(userId, LocalDateTime.now());
-                break;
-            case "FUTURE":
-                bookings = repository.findByBookerIdAndStartAfter(userId, LocalDateTime.now());
-                break;
-            case "WAITING":
-                bookings = repository.findByBookerIdAndStatus(userId, BookingStatus.WAITING);
-                break;
-            case "REJECTED":
-                bookings = repository.findByBookerIdAndStatus(userId, BookingStatus.REJECTED);
-                break;
-            default:
-                break;
-        }
-        for (Booking b : bookings) {
-            bookingsGetMap.put(b, itemService.getItemById(b.getItemId()));
-        }
-        return mapper.mapToListBookingGetDto(bookingsGetMap).stream()
-                .sorted(Comparator.comparing(BookingGetDto::getStart))
-                .collect(Collectors.toList());
-    }*/
-
 
     @Override
     public List<BookingGetDto> getAllBookingsOfCurrentUserItems(Long userId, String state) {

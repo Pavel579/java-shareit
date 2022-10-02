@@ -6,12 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.practicum.shareit.booking.BookingStatus;
-import ru.practicum.shareit.item.model.Item;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Future;
 import java.time.LocalDateTime;
 
@@ -32,7 +27,6 @@ public class BookingDto {
     private LocalDateTime start;
     @Future
     private LocalDateTime end;
-
 
 
 }

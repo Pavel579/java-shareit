@@ -10,7 +10,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +38,7 @@ public class ItemMapper {
     public ItemBookingDto mapToItemBookingDto(Item item,
                                               ItemBookingDto.BookingDto lastBookingDto,
                                               ItemBookingDto.BookingDto nextBookingDto,
-                                              List<CommentDto> comments){
+                                              List<CommentDto> comments) {
         return new ItemBookingDto(item.getId(),
                 item.getName(),
                 item.getDescription(),
@@ -50,17 +49,17 @@ public class ItemMapper {
                 comments);
     }
 
-    public List<CommentDto> mapToListCommentDto(List<Comment> list){
+    public List<CommentDto> mapToListCommentDto(List<Comment> list) {
         return list.stream().map(this::mapToCommentDto).collect(Collectors.toList());
     }
 
-    public ItemBookingDto.BookingDto mapToLastNextBookingDto(List<Booking> list){
-        if (list!=null && !list.isEmpty()){
+    public ItemBookingDto.BookingDto mapToLastNextBookingDto(List<Booking> list) {
+        if (list != null && !list.isEmpty()) {
             return new ItemBookingDto.BookingDto(list.get(0).getId(),
                     list.get(0).getStart(),
                     list.get(0).getEnd(),
                     list.get(0).getBooker().getId());
-        }else {
+        } else {
             return null;
         }
     }
@@ -69,7 +68,7 @@ public class ItemMapper {
         return items.stream().map(this::mapToItemDto).collect(Collectors.toList());
     }
 
-    public Comment mapToComment(CommentDto commentDto, Item item, User user){
+    public Comment mapToComment(CommentDto commentDto, Item item, User user) {
         return new Comment(commentDto.getId(),
                 commentDto.getText(),
                 item,
@@ -77,7 +76,7 @@ public class ItemMapper {
                 LocalDateTime.now());
     }
 
-    public CommentDto mapToCommentDto(Comment comment){
+    public CommentDto mapToCommentDto(Comment comment) {
         return new CommentDto(comment.getId(),
                 comment.getText(),
                 comment.getAuthor().getName(),

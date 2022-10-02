@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.utils.Create;
 
 import javax.validation.constraints.NotBlank;
