@@ -1,7 +1,10 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exceptions.IncorrectIdException;
@@ -28,6 +31,8 @@ import java.util.stream.Collectors;
 import static ru.practicum.shareit.utils.Utils.getNullPropertyNames;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
     private final BookingRepository bookingRepository;
@@ -35,15 +40,8 @@ public class ItemServiceImpl implements ItemService {
     private final UserService userService;
     private final ItemMapper mapper;
 
-    public ItemServiceImpl(ItemRepository repository, BookingRepository bookingRepository, CommentRepository commentRepository, UserService userService, ItemMapper mapper) {
-        this.repository = repository;
-        this.bookingRepository = bookingRepository;
-        this.commentRepository = commentRepository;
-        this.userService = userService;
-        this.mapper = mapper;
-    }
-
     @Override
+    @Transactional
     public ItemDto createItem(Long id, ItemDto itemDto) {
         checkId(id);
         User user = userService.getUserById(id);
@@ -53,6 +51,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemDto updateItem(Long id, ItemDto itemDto, Long itemId) {
         checkId(id);
         userService.getUserById(id);
@@ -68,9 +67,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemBookingDto getItemDtoById(Long userId, Long itemId) {
         ItemBookingDto.BookingDto lastBookingDto = mapper.mapToLastNextBookingDto(repository.findLastBooking(userId,
-                itemId, LocalDateTime.now()));
+                itemId, LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start")));
         ItemBookingDto.BookingDto nextBookingDto = mapper.mapToLastNextBookingDto(repository.findNextBooking(userId,
-                itemId, LocalDateTime.now()));
+                itemId, LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start")));
         List<Comment> comments = commentRepository.findComments(itemId);
         return mapper.mapToItemBookingDto(getItemById(itemId), lastBookingDto, nextBookingDto,
                 mapper.mapToListCommentDto(comments));
@@ -88,9 +87,9 @@ public class ItemServiceImpl implements ItemService {
         List<ItemBookingDto> result = new ArrayList<>();
         for (Item item : items) {
             ItemBookingDto.BookingDto lastBookingDto = mapper.mapToLastNextBookingDto(repository.findLastBooking(id,
-                    item.getId(), LocalDateTime.now()));
+                    item.getId(), LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start")));
             ItemBookingDto.BookingDto nextBookingDto = mapper.mapToLastNextBookingDto(repository.findNextBooking(id,
-                    item.getId(), LocalDateTime.now()));
+                    item.getId(), LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start")));
             List<Comment> comments = commentRepository.findComments(item.getId());
             result.add(mapper.mapToItemBookingDto(item, lastBookingDto, nextBookingDto,
                     mapper.mapToListCommentDto(comments)));
@@ -114,6 +113,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public CommentDto createComment(Long id, Long itemId, CommentDto commentDto) {
         Booking booking = bookingRepository.findBooking(id, itemId, LocalDateTime.now());
         Item item = getItemById(itemId);

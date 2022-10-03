@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.storage;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,9 +19,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "upper(i.description) like upper(concat('%', ?1, '%')))")
     List<Item> searchItemsByNameOrDescription(String text);
 
-    @Query("select b from Booking b where b.item.owner.id = ?1 and b.item.id = ?2 and b.end<?3 order by b.start desc ")
-    List<Booking> findLastBooking(Long userId, Long itemId, LocalDateTime now);
+    @Query("select b from Booking b where b.item.owner.id = ?1 and b.item.id = ?2 and b.end<?3")
+    List<Booking> findLastBooking(Long userId, Long itemId, LocalDateTime now, Sort sort);
 
-    @Query("select b from Booking b where b.item.owner.id = ?1 and b.item.id = ?2 and b.start>?3 order by b.start desc ")
-    List<Booking> findNextBooking(Long userId, Long itemId, LocalDateTime now);
+    @Query("select b from Booking b where b.item.owner.id = ?1 and b.item.id = ?2 and b.start>?3")
+    List<Booking> findNextBooking(Long userId, Long itemId, LocalDateTime now, Sort sort);
 }

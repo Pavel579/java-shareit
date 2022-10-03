@@ -89,5 +89,4 @@ public class ErrorHandler {
         log.debug("IncorrectStateException");
         return new ResponseEntity<>(Map.of("error",e.getMessage()), HttpStatus.BAD_REQUEST);
     }
-
 }

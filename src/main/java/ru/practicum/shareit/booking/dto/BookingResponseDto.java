@@ -10,7 +10,6 @@ import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import javax.validation.constraints.Future;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,12 +18,10 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingGetDto {
+public class BookingResponseDto {
     private Long id;
     private BookingStatus status;
-    @Future
     private LocalDateTime start;
-    @Future
     private LocalDateTime end;
     private Item item;
     private User booker;

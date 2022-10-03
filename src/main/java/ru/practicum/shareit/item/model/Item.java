@@ -32,12 +32,14 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name", length = 100)
     private String name;
+    @Column(name = "description", length = 800)
     private String description;
     @Column(name = "is_available")
     private Boolean available;
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
     @Column(name = "request_id")
     private Long request;

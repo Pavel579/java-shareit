@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingGetDto;
+import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exceptions.DatesAreNotCorrectException;
+import ru.practicum.shareit.exceptions.IncorrectStateException;
 
 import java.util.List;
 
@@ -22,42 +24,57 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/bookings")
 public class BookingController {
-    BookingService bookingService;
-    BookingMapper mapper;
+    private final BookingService bookingService;
 
-    public BookingController(BookingService bookingService, BookingMapper mapper) {
+    public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
-        this.mapper = mapper;
     }
 
     @PostMapping
     public BookingDto createNewBooking(@RequestHeader("X-Sharer-User-Id") Long id,
                                        @Validated @RequestBody BookingDto bookingDto) {
+        checkDates(bookingDto);
         return bookingService.createNewBooking(bookingDto, id);
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingGetDto approveBooking(@RequestHeader("X-Sharer-User-Id") Long id,
-                                        @PathVariable Long bookingId,
-                                        @RequestParam Boolean approved) {
+    public BookingResponseDto approveBooking(@RequestHeader("X-Sharer-User-Id") Long id,
+                                             @PathVariable Long bookingId,
+                                             @RequestParam Boolean approved) {
         return bookingService.approveBooking(id, bookingId, approved);
     }
 
     @GetMapping
-    public List<BookingGetDto> getAllBookingsByUserId(@RequestHeader("X-Sharer-User-Id") Long id,
-                                                      @RequestParam(required = false) String state) {
-        return bookingService.getAllBookingsByUserId(id, state);
+    public List<BookingResponseDto> getAllBookingsByUserId(@RequestHeader("X-Sharer-User-Id") Long id,
+                                                           @RequestParam(required = false, defaultValue = "ALL") String state) {
+        try {
+            BookingState bookingState = BookingState.valueOf(state);
+            return bookingService.getAllBookingsByUserId(id, bookingState);
+        } catch (IllegalArgumentException e) {
+            throw new IncorrectStateException("Unknown state: " + state);
+        }
     }
 
     @GetMapping("/{bookingId}")
-    public BookingGetDto getBookingById(@RequestHeader("X-Sharer-User-Id") Long id,
-                                        @PathVariable Long bookingId) {
+    public BookingResponseDto getBookingById(@RequestHeader("X-Sharer-User-Id") Long id,
+                                             @PathVariable Long bookingId) {
         return bookingService.getBookingById(id, bookingId);
     }
 
     @GetMapping("/owner")
-    public List<BookingGetDto> getAllBookingsOfCurrentUserItems(@RequestHeader("X-Sharer-User-Id") Long id,
-                                                                @RequestParam(required = false) String state) {
-        return bookingService.getAllBookingsOfCurrentUserItems(id, state);
+    public List<BookingResponseDto> getAllBookingsOfCurrentUserItems(@RequestHeader("X-Sharer-User-Id") Long id,
+                                                                     @RequestParam(required = false, defaultValue = "ALL") String state) {
+        try {
+            BookingState bookingState = BookingState.valueOf(state);
+            return bookingService.getAllBookingsOfCurrentUserItems(id, bookingState);
+        } catch (IllegalArgumentException e) {
+            throw new IncorrectStateException("Unknown state: " + state);
+        }
+    }
+
+    private void checkDates(BookingDto booking) {
+        if (!booking.getStart().isBefore(booking.getEnd())) {
+            throw new DatesAreNotCorrectException("Дата начала после даты окончания");
+        }
     }
 }
