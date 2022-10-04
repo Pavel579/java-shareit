@@ -6,13 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
-import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDateTime;
-
-/**
- * TODO Sprint add-bookings.
- */
 
 @Getter
 @Setter
@@ -20,13 +18,12 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingDto {
+public class BookingResponseDto {
     private Long id;
-    private Long itemId;
-    @FutureOrPresent
+    private BookingStatus status;
     private LocalDateTime start;
-    @FutureOrPresent
     private LocalDateTime end;
-
+    private Item item;
+    private User booker;
 
 }
