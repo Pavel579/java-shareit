@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +18,8 @@ import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.utils.Create;
 import ru.practicum.shareit.utils.Update;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -24,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/items")
+@Validated
 public class ItemController {
     private final ItemService itemService;
 
@@ -51,13 +55,23 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemBookingDto> getAllItemsDtoOfUser(@RequestHeader("X-Sharer-User-Id") Long id) {
-        return itemService.getAllItemsDtoOfUser(id);
+    public List<ItemBookingDto> getAllItemsDtoOfUser(
+            @RequestHeader("X-Sharer-User-Id") Long id,
+            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        return itemService.getAllItemsDtoOfUser(id, pageRequest);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItemsByNameOrDescription(@RequestParam String text) {
-        return itemService.searchItemsByNameOrDescription(text);
+    public List<ItemDto> searchItemsByNameOrDescription(
+            @RequestParam String text,
+            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        int page = from / size;
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        return itemService.searchItemsByNameOrDescription(text, pageRequest);
     }
 
 

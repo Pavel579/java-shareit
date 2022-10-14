@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingMapper;
@@ -36,7 +36,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto createNewBooking(BookingDto bookingDto, Long userId) {
+    public BookingResponseDto createNewBooking(BookingDto bookingDto, Long userId) {
         User user = userService.getUserById(userId);
         Item item = itemService.getItemById(bookingDto.getItemId());
         if (item.getOwner().getId().equals(userId)) {
@@ -44,7 +44,7 @@ public class BookingServiceImpl implements BookingService {
         }
         if (item.getAvailable()) {
             Booking booking = repository.save(mapper.mapToBooking(bookingDto, item, user));
-            return mapper.mapToBookingDto(booking);
+            return mapper.mapToBookingResponseDto(booking);
         } else {
             throw new ItemIsNotAvailableException("Item not available");
         }
@@ -90,64 +90,64 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookingsByUserId(Long userId, BookingState state) {
+    public List<BookingResponseDto> getAllBookingsByUserId(Long userId, BookingState state, PageRequest pageRequest) {
         userService.getUserById(userId);
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
             case ALL:
-                bookings = repository.findAllByBooker_Id(userId, Sort.by(Sort.Direction.DESC, "start"));
+                bookings = repository.findAllByBooker_Id(userId, pageRequest);
                 break;
             case CURRENT:
                 bookings = repository.findByBooker_IdAndStartBeforeAndEndAfter(userId,
-                        LocalDateTime.now(), LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                        LocalDateTime.now(), LocalDateTime.now(), pageRequest);
                 break;
             case PAST:
                 bookings = repository.findByBooker_IdAndEndBefore(userId,
-                        LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                        LocalDateTime.now(), pageRequest);
                 break;
             case FUTURE:
                 bookings = repository.findByBooker_IdAndStartAfter(userId,
-                        LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                        LocalDateTime.now(), pageRequest);
                 break;
             case WAITING:
                 bookings = repository.findByBooker_IdAndStatus(userId,
-                        BookingStatus.WAITING, Sort.by(Sort.Direction.DESC, "start"));
+                        BookingStatus.WAITING, pageRequest);
                 break;
             case REJECTED:
                 bookings = repository.findByBooker_IdAndStatus(userId,
-                        BookingStatus.REJECTED, Sort.by(Sort.Direction.DESC, "start"));
+                        BookingStatus.REJECTED, pageRequest);
                 break;
         }
         return mapper.mapToListBookingResponseDto(bookings);
     }
 
     @Override
-    public List<BookingResponseDto> getAllBookingsOfCurrentUserItems(Long userId, BookingState state) {
+    public List<BookingResponseDto> getAllBookingsOfCurrentUserItems(Long userId, BookingState state, PageRequest pageRequest) {
         userService.getUserById(userId);
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
             case ALL:
-                bookings = repository.findAllByItem_Owner_Id(userId, Sort.by(Sort.Direction.DESC, "start"));
+                bookings = repository.findAllByItem_Owner_Id(userId, pageRequest);
                 break;
             case CURRENT:
                 bookings = repository.findByItem_Owner_IdAndStartBeforeAndEndAfter(userId,
-                        LocalDateTime.now(), LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                        LocalDateTime.now(), LocalDateTime.now(), pageRequest);
                 break;
             case PAST:
                 bookings = repository.findByItem_Owner_IdAndEndBefore(userId,
-                        LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                        LocalDateTime.now(), pageRequest);
                 break;
             case FUTURE:
                 bookings = repository.findByItem_Owner_IdAndStartAfter(userId,
-                        LocalDateTime.now(), Sort.by(Sort.Direction.DESC, "start"));
+                        LocalDateTime.now(), pageRequest);
                 break;
             case WAITING:
                 bookings = repository.findByItem_Owner_IdAndStatus(userId,
-                        BookingStatus.WAITING, Sort.by(Sort.Direction.DESC, "start"));
+                        BookingStatus.WAITING, pageRequest);
                 break;
             case REJECTED:
                 bookings = repository.findByItem_Owner_IdAndStatus(userId,
-                        BookingStatus.REJECTED, Sort.by(Sort.Direction.DESC, "start"));
+                        BookingStatus.REJECTED, pageRequest);
                 break;
         }
         return mapper.mapToListBookingResponseDto(bookings);
