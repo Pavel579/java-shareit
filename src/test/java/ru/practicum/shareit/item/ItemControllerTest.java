@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.item.service.ItemServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ItemControllerTest {
     @MockBean
-    private ItemService itemService;
+    private ItemServiceImpl itemService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -57,7 +57,6 @@ public class ItemControllerTest {
         when(itemService.getItemDtoById(1L, 1L)).thenReturn(itemBookingDto);
         mockMvc.perform(get("/items/1")
                         .header("X-Sharer-User-Id", 1L)
-                        .content(objectMapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("item1"));
         verify(itemService, times(1)).getItemDtoById(1L, 1L);

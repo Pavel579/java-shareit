@@ -39,7 +39,6 @@ public class BookingServiceTest {
     private final BookingMapper bookingMapper = new BookingMapper();
     private BookingDto bookingDto;
     private Booking booking;
-    private BookingResponseDto bookingResponseDto;
     private Item item;
     private Item itemNotAvailable;
     private User user;
@@ -58,8 +57,6 @@ public class BookingServiceTest {
         itemNotAvailable = new Item(2L, "item2", "description2", false, user, null);
         bookingDto = new BookingDto(1L, 1L,
                 LocalDateTime.of(2023, 5, 23, 12, 0), LocalDateTime.MAX);
-        bookingResponseDto = new BookingResponseDto(1L, BookingStatus.APPROVED,
-                LocalDateTime.of(2023, 5, 23, 12, 0), LocalDateTime.MAX, item, user);
         pageRequest = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "start"));
         booking = new Booking(1L, LocalDateTime.of(2021, 5, 23, 12, 0),
                 LocalDateTime.MAX, item, user, BookingStatus.APPROVED);
@@ -201,6 +198,4 @@ public class BookingServiceTest {
         result = bookingService.getAllBookingsOfCurrentUserItems(1L, BookingState.REJECTED, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.REJECTED);
     }
-
-
 }

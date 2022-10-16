@@ -18,7 +18,6 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -39,14 +38,12 @@ public class ItemServiceTest {
     private ItemRepository itemRepository;
     private BookingRepository bookingRepository;
     private CommentRepository commentRepository;
-    private ItemRequestService itemRequestService;
     private UserService userService;
 
     private Item item;
     private Item updatedItem;
     private User user;
     private ItemDto itemDto;
-    private ItemRequest itemRequest;
     private Booking booking;
 
     @BeforeEach
@@ -54,12 +51,11 @@ public class ItemServiceTest {
         itemRepository = mock(ItemRepository.class);
         bookingRepository = mock(BookingRepository.class);
         commentRepository = mock(CommentRepository.class);
-        itemRequestService = mock(ItemRequestService.class);
+        ItemRequestService itemRequestService = mock(ItemRequestService.class);
         userService = mock(UserService.class);
         itemService = new ItemServiceImpl(itemRepository, bookingRepository, commentRepository,
                 itemRequestService, userService, mapper);
         user = new User(1L, "asdf", "asdfd@mail.ru");
-        itemRequest = new ItemRequest(1L, "adsfasd", 1L, LocalDateTime.now());
         itemDto = new ItemDto(1L, "item1", "description", true, null);
         item = new Item(1L, "item1", "description", true, user, null);
         updatedItem = new Item(1L, "item updated", "description", true, user, null);

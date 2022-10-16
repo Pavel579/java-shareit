@@ -38,14 +38,12 @@ public class BookingControllerTest {
     private ObjectMapper objectMapper;
     private BookingDto bookingDto;
     private BookingResponseDto bookingResponseDto;
-    private Item item;
-    private User user;
     private PageRequest pageRequest;
 
     @BeforeEach
     void beforeEach() {
-        user = new User(1L, "name1", "mail@mail.ru");
-        item = new Item(1L, "item1", "description1", true, user, null);
+        User user = new User(1L, "name1", "mail@mail.ru");
+        Item item = new Item(1L, "item1", "description1", true, user, null);
         bookingDto = new BookingDto(1L, 1L,
                 LocalDateTime.of(2023, 5, 23, 12, 0), LocalDateTime.MAX);
         bookingResponseDto = new BookingResponseDto(1L, BookingStatus.APPROVED,
@@ -60,7 +58,7 @@ public class BookingControllerTest {
                         .header("X-Sharer-User-Id", 1L)
                         .content(objectMapper.writeValueAsString(bookingDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.itemId").value(1L));
+                .andExpect(jsonPath("$.item.id").value(1L));
         verify(bookingService, times(1)).createNewBooking(bookingDto, 1L);
     }
 
@@ -86,7 +84,6 @@ public class BookingControllerTest {
 
     @Test
     void getAllBookingsByUserIdTest() throws Exception {
-        //PageRequest pageRequest = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "start"));
         when(bookingService.getAllBookingsByUserId(1L, BookingState.ALL, pageRequest))
                 .thenReturn(Collections.singletonList(bookingResponseDto));
         mockMvc.perform(get("/bookings?state=ALL&from=0&size=2")

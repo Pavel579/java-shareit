@@ -22,7 +22,6 @@ public class UserServiceTest {
     private UserServiceImpl userService;
     private UserRepository userRepository;
 
-
     private User user;
     private User user2;
     private UserDto userDto;
@@ -45,8 +44,6 @@ public class UserServiceTest {
         assertNotNull(usersDto);
         assertEquals(usersDto.get(0).getName(), "name1");
         assertEquals(1, usersDto.size());
-
-
     }
 
     @Test
@@ -90,5 +87,4 @@ public class UserServiceTest {
         assertNotNull(result);
         assertEquals(result.getName(), "namedto1");
     }
-
 }

@@ -28,12 +28,11 @@ public class ItemServiceSpringBootTest {
     @Autowired
     private UserServiceImpl userService;
     private ItemDto itemDto;
-    private UserDto userDto;
 
     @BeforeEach
     void beforeEach() {
         itemDto = new ItemDto(1L, "item1", "description1", true, null);
-        userDto = new UserDto(1L, "user1", "mail@mail.ru");
+        UserDto userDto = new UserDto(1L, "user1", "mail@mail.ru");
         userService.createUser(userDto);
     }
 

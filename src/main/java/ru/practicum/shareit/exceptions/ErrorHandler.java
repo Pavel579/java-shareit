@@ -12,18 +12,6 @@ import java.util.Map;
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
-    /*@ExceptionHandler
-    public ResponseEntity<String> handleEmailNotFoundException(final EmailNotFoundException e) {
-        log.debug("EmailNotFoundException");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }*/
-
-    /*@ExceptionHandler
-    public ResponseEntity<String> handleEmailDuplicatedException(final EmailDuplicatedException e) {
-        log.debug("EmailDuplicatedException");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }*/
-
     @ExceptionHandler
     public ResponseEntity<String> handleIncorrectIdException(final IncorrectIdException e) {
         log.debug("IncorrectIdException");
