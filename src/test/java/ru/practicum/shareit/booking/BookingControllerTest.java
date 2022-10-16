@@ -15,6 +15,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.exceptions.DatesAreNotCorrectException;
+import ru.practicum.shareit.exceptions.ItemIsNotAvailableException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -60,6 +61,16 @@ public class BookingControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.item.id").value(1L));
         verify(bookingService, times(1)).createNewBooking(bookingDto, 1L);
+    }
+
+    @Test
+    void createNewBookingWithItemNotAvailableTest() throws Exception {
+        when(bookingService.createNewBooking(bookingDto, 1L)).thenThrow(new ItemIsNotAvailableException(""));
+        mockMvc.perform(post("/bookings")
+                        .header("X-Sharer-User-Id", 1L)
+                        .content(objectMapper.writeValueAsString(bookingDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

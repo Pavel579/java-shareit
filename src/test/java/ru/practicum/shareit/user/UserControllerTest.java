@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exceptions.IncorrectIdException;
+import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -51,6 +53,18 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Pavel"));
         verify(userService, times(1)).getUserDtoById(1L);
+    }
+
+    @Test
+    void getUserByIncorrectIdTest() throws Exception {
+        when(userService.getUserDtoById(10L))
+                .thenThrow(new UserNotFoundException("Пользователь не найден"));
+        mockMvc.perform(get("/users/10"))
+                .andExpect(status().isNotFound());
+        when(userService.getUserDtoById(-10L))
+                .thenThrow(new IncorrectIdException(""));
+        mockMvc.perform(get("/users/-10"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
