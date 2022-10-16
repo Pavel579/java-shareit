@@ -10,6 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exceptions.IncorrectOwnerException;
+import ru.practicum.shareit.exceptions.ItemNotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -63,6 +65,15 @@ public class ItemControllerTest {
     }
 
     @Test
+    void getItemByIncorrectIdTest() throws Exception {
+        when(itemService.getItemDtoById(1L, 10L)).thenThrow(new ItemNotFoundException(""));
+        mockMvc.perform(get("/items/10")
+                        .header("X-Sharer-User-Id", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void updateItemTest() throws Exception {
         when(itemService.updateItem(1L, itemDto, 1L)).thenReturn(itemDto);
         mockMvc.perform(patch("/items/1")
@@ -71,6 +82,16 @@ public class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("item1"));
         verify(itemService, times(1)).updateItem(1L, itemDto, 1L);
+    }
+
+    @Test
+    void updateItemByWrongUserTest() throws Exception {
+        when(itemService.updateItem(3L, itemDto, 1L)).thenThrow(new IncorrectOwnerException(""));
+        mockMvc.perform(patch("/items/1")
+                        .header("X-Sharer-User-Id", 3L)
+                        .content(objectMapper.writeValueAsString(itemDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
     @Test

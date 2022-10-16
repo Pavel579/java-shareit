@@ -14,7 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
+import ru.practicum.shareit.exceptions.BookingNotFoundException;
 import ru.practicum.shareit.exceptions.DatesAreNotCorrectException;
+import ru.practicum.shareit.exceptions.IncorrectStateException;
 import ru.practicum.shareit.exceptions.ItemIsNotAvailableException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -84,6 +86,16 @@ public class BookingControllerTest {
     }
 
     @Test
+    void approveBookingWithIncorrectStateTest() throws Exception {
+        when(bookingService.approveBooking(1L, 1L, true)).thenThrow(new IncorrectStateException(""));
+        mockMvc.perform(patch("/bookings/1?approved=true")
+                        .header("X-Sharer-User-Id", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
     void getBookingByIdTest() throws Exception {
         when(bookingService.getBookingById(1L, 1L)).thenReturn(bookingResponseDto);
         mockMvc.perform(get("/bookings/1")
@@ -91,6 +103,15 @@ public class BookingControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.item.name").value("item1"));
         verify(bookingService, times(1)).getBookingById(1L, 1L);
+    }
+
+    @Test
+    void getBookingByIncorrectIdTest() throws Exception {
+        when(bookingService.getBookingById(1L, 10L)).thenThrow(new BookingNotFoundException(""));
+        mockMvc.perform(get("/bookings/10")
+                        .header("X-Sharer-User-Id", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
