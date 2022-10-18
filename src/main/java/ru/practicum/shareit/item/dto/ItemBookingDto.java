@@ -1,19 +1,13 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemBookingDto {
@@ -26,7 +20,7 @@ public class ItemBookingDto {
     private BookingDto nextBooking;
     private List<CommentDto> comments;
 
-    @Getter
+    @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class BookingDto {

@@ -55,7 +55,6 @@ public class ItemServiceImpl implements ItemService {
         }
         Item item = repository.save(mapper.mapToItem(itemDto, user, itemRequest));
         return mapper.mapToItemDto(item);
-        //return mapper.mapToItemDto(repository.save(mapper.mapToItem(itemDto, user, itemRequest)));
     }
 
     @Override

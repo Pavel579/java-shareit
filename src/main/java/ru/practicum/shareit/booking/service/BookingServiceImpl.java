@@ -95,26 +95,26 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
             case ALL:
-                bookings = repository.findAllByBooker_Id(userId, pageRequest);
+                bookings = repository.findAllByBookerId(userId, pageRequest);
                 break;
             case CURRENT:
-                bookings = repository.findByBooker_IdAndStartBeforeAndEndAfter(userId,
+                bookings = repository.findByBookerIdAndStartBeforeAndEndAfter(userId,
                         LocalDateTime.now(), LocalDateTime.now(), pageRequest);
                 break;
             case PAST:
-                bookings = repository.findByBooker_IdAndEndBefore(userId,
+                bookings = repository.findByBookerIdAndEndBefore(userId,
                         LocalDateTime.now(), pageRequest);
                 break;
             case FUTURE:
-                bookings = repository.findByBooker_IdAndStartAfter(userId,
+                bookings = repository.findByBookerIdAndStartAfter(userId,
                         LocalDateTime.now(), pageRequest);
                 break;
             case WAITING:
-                bookings = repository.findByBooker_IdAndStatus(userId,
+                bookings = repository.findByBookerIdAndStatus(userId,
                         BookingStatus.WAITING, pageRequest);
                 break;
             case REJECTED:
-                bookings = repository.findByBooker_IdAndStatus(userId,
+                bookings = repository.findByBookerIdAndStatus(userId,
                         BookingStatus.REJECTED, pageRequest);
                 break;
         }
@@ -127,26 +127,26 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
             case ALL:
-                bookings = repository.findAllByItem_Owner_Id(userId, pageRequest);
+                bookings = repository.findAllByItemOwnerId(userId, pageRequest);
                 break;
             case CURRENT:
-                bookings = repository.findByItem_Owner_IdAndStartBeforeAndEndAfter(userId,
+                bookings = repository.findByItemOwnerIdAndStartBeforeAndEndAfter(userId,
                         LocalDateTime.now(), LocalDateTime.now(), pageRequest);
                 break;
             case PAST:
-                bookings = repository.findByItem_Owner_IdAndEndBefore(userId,
+                bookings = repository.findByItemOwnerIdAndEndBefore(userId,
                         LocalDateTime.now(), pageRequest);
                 break;
             case FUTURE:
-                bookings = repository.findByItem_Owner_IdAndStartAfter(userId,
+                bookings = repository.findByItemOwnerIdAndStartAfter(userId,
                         LocalDateTime.now(), pageRequest);
                 break;
             case WAITING:
-                bookings = repository.findByItem_Owner_IdAndStatus(userId,
+                bookings = repository.findByItemOwnerIdAndStatus(userId,
                         BookingStatus.WAITING, pageRequest);
                 break;
             case REJECTED:
-                bookings = repository.findByItem_Owner_IdAndStatus(userId,
+                bookings = repository.findByItemOwnerIdAndStatus(userId,
                         BookingStatus.REJECTED, pageRequest);
                 break;
         }

@@ -132,33 +132,33 @@ public class BookingServiceTest {
     @Test
     void getAllBookingsByUserIdTest() {
         when(userService.getUserById(1L)).thenReturn(user);
-        when(bookingRepository.findAllByBooker_Id(1L, pageRequest)).thenReturn(Collections.singletonList(booking));
+        when(bookingRepository.findAllByBookerId(1L, pageRequest)).thenReturn(Collections.singletonList(booking));
         List<BookingResponseDto> result = bookingService.getAllBookingsByUserId(1L, BookingState.ALL, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.APPROVED);
 
-        when(bookingRepository.findByBooker_IdAndStartBeforeAndEndAfter(any(), any(), any(), any()))
+        when(bookingRepository.findByBookerIdAndStartBeforeAndEndAfter(any(), any(), any(), any()))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsByUserId(1L, BookingState.CURRENT, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.APPROVED);
 
-        when(bookingRepository.findByBooker_IdAndEndBefore(any(), any(), any()))
+        when(bookingRepository.findByBookerIdAndEndBefore(any(), any(), any()))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsByUserId(1L, BookingState.PAST, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.APPROVED);
 
-        when(bookingRepository.findByBooker_IdAndStartAfter(any(), any(), any()))
+        when(bookingRepository.findByBookerIdAndStartAfter(any(), any(), any()))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsByUserId(1L, BookingState.FUTURE, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.APPROVED);
 
         booking.setStatus(BookingStatus.WAITING);
-        when(bookingRepository.findByBooker_IdAndStatus(1L, BookingStatus.WAITING, pageRequest))
+        when(bookingRepository.findByBookerIdAndStatus(1L, BookingStatus.WAITING, pageRequest))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsByUserId(1L, BookingState.WAITING, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.WAITING);
 
         booking.setStatus(BookingStatus.REJECTED);
-        when(bookingRepository.findByBooker_IdAndStatus(1L, BookingStatus.REJECTED, pageRequest))
+        when(bookingRepository.findByBookerIdAndStatus(1L, BookingStatus.REJECTED, pageRequest))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsByUserId(1L, BookingState.REJECTED, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.REJECTED);
@@ -167,33 +167,33 @@ public class BookingServiceTest {
     @Test
     void getAllBookingsOfCurrentUserItemsTest() {
         when(userService.getUserById(1L)).thenReturn(user);
-        when(bookingRepository.findAllByItem_Owner_Id(1L, pageRequest)).thenReturn(Collections.singletonList(booking));
+        when(bookingRepository.findAllByItemOwnerId(1L, pageRequest)).thenReturn(Collections.singletonList(booking));
         List<BookingResponseDto> result = bookingService.getAllBookingsOfCurrentUserItems(1L, BookingState.ALL, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.APPROVED);
 
-        when(bookingRepository.findByItem_Owner_IdAndStartBeforeAndEndAfter(any(), any(), any(), any()))
+        when(bookingRepository.findByItemOwnerIdAndStartBeforeAndEndAfter(any(), any(), any(), any()))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsOfCurrentUserItems(1L, BookingState.CURRENT, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.APPROVED);
 
-        when(bookingRepository.findByItem_Owner_IdAndEndBefore(any(), any(), any()))
+        when(bookingRepository.findByItemOwnerIdAndEndBefore(any(), any(), any()))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsOfCurrentUserItems(1L, BookingState.PAST, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.APPROVED);
 
-        when(bookingRepository.findByItem_Owner_IdAndStartAfter(any(), any(), any()))
+        when(bookingRepository.findByItemOwnerIdAndStartAfter(any(), any(), any()))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsOfCurrentUserItems(1L, BookingState.FUTURE, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.APPROVED);
 
         booking.setStatus(BookingStatus.WAITING);
-        when(bookingRepository.findByItem_Owner_IdAndStatus(1L, BookingStatus.WAITING, pageRequest))
+        when(bookingRepository.findByItemOwnerIdAndStatus(1L, BookingStatus.WAITING, pageRequest))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsOfCurrentUserItems(1L, BookingState.WAITING, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.WAITING);
 
         booking.setStatus(BookingStatus.REJECTED);
-        when(bookingRepository.findByItem_Owner_IdAndStatus(1L, BookingStatus.REJECTED, pageRequest))
+        when(bookingRepository.findByItemOwnerIdAndStatus(1L, BookingStatus.REJECTED, pageRequest))
                 .thenReturn(Collections.singletonList(booking));
         result = bookingService.getAllBookingsOfCurrentUserItems(1L, BookingState.REJECTED, pageRequest);
         assertEquals(result.get(0).getStatus(), BookingStatus.REJECTED);
