@@ -5,6 +5,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
+import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
@@ -18,17 +19,24 @@ import static ru.practicum.shareit.utils.Utils.getNullPropertyNames;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
+    private final UserMapper mapper;
 
     @Override
     @Transactional
-    public User createUser(User user) {
-        repository.save(user);
-        return user;
+    public UserDto createUser(UserDto userDto) {
+        User user = repository.save(mapper.mapToUser(userDto));
+        return mapper.mapToUserDto(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return repository.findAll();
+    public List<UserDto> getAllUsers() {
+        return mapper.mapToListUserDto(repository.findAll());
+    }
+
+    @Override
+    public UserDto getUserDtoById(Long id) {
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+        return mapper.mapToUserDto(user);
     }
 
     @Override
@@ -38,10 +46,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updateUserById(Long id, UserDto userDto) {
+    public UserDto updateUserById(Long id, UserDto userDto) {
         User userFromStorage = getUserById(id);
         BeanUtils.copyProperties(userDto, userFromStorage, getNullPropertyNames(userDto));
-        return repository.save(userFromStorage);
+        User user = repository.save(userFromStorage);
+        return mapper.mapToUserDto(user);
     }
 
     @Override

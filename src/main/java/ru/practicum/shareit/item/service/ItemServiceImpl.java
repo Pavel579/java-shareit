@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -37,6 +40,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestService itemRequestService;
     private final UserService userService;
     private final ItemMapper mapper;
 
@@ -45,9 +49,12 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto createItem(Long id, ItemDto itemDto) {
         checkId(id);
         User user = userService.getUserById(id);
-        Item item = repository.save(mapper.mapToItem(itemDto, user));
+        ItemRequest itemRequest = null;
+        if (itemDto.getRequestId() != null) {
+            itemRequest = itemRequestService.getItemRequestById(itemDto.getRequestId());
+        }
+        Item item = repository.save(mapper.mapToItem(itemDto, user, itemRequest));
         return mapper.mapToItemDto(item);
-
     }
 
     @Override
@@ -82,8 +89,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemBookingDto> getAllItemsDtoOfUser(Long id) {
-        List<Item> items = getAllItemsOfUser(id);
+    public List<ItemBookingDto> getAllItemsDtoOfUser(Long id, PageRequest pageRequest) {
+        List<Item> items = getAllItemsOfUser(id, pageRequest);
         List<ItemBookingDto> result = new ArrayList<>();
         for (Item item : items) {
             ItemBookingDto.BookingDto lastBookingDto = mapper.mapToLastNextBookingDto(repository.findLastBooking(id,
@@ -98,15 +105,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllItemsOfUser(Long id) {
+    public List<Item> getAllItemsOfUser(Long id, PageRequest pageRequest) {
         checkId(id);
-        return repository.findByOwnerId(id);
+        return repository.findByOwnerId(id, pageRequest);
     }
 
     @Override
-    public List<ItemDto> searchItemsByNameOrDescription(String text) {
+    public List<ItemDto> searchItemsByNameOrDescription(String text, PageRequest pageRequest) {
         if (!text.equals("")) {
-            return mapper.mapToListItemDto(repository.searchItemsByNameOrDescription(text));
+            return mapper.mapToListItemDto(repository.searchItemsByNameOrDescription(text, pageRequest));
         } else {
             return Collections.emptyList();
         }

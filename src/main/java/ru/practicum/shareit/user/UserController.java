@@ -1,6 +1,6 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,35 +22,29 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserMapper userMapper;
-
-    @Autowired
-    public UserController(UserService userService, UserMapper userMapper) {
-        this.userService = userService;
-        this.userMapper = userMapper;
-    }
 
     @PostMapping
     public UserDto createUser(@Validated(Create.class) @RequestBody UserDto userDto) {
-        return userMapper.mapToUserDto(userService.createUser(userMapper.mapToUser(userDto)));
+        return userService.createUser(userDto);
     }
 
     @GetMapping
     public List<UserDto> getAllUsers() {
-        return userMapper.mapToListUserDto(userService.getAllUsers());
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable Long id) {
-        return userMapper.mapToUserDto(userService.getUserById(id));
+        return userService.getUserDtoById(id);
     }
 
     @PatchMapping("/{id}")
     public UserDto updateUserById(@PathVariable Long id,
                                   @Validated(Update.class) @RequestBody UserDto userDto) {
-        return userMapper.mapToUserDto(userService.updateUserById(id, userDto));
+        return userService.updateUserById(id, userDto);
     }
 
     @DeleteMapping("/{id}")

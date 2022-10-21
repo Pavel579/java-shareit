@@ -13,18 +13,6 @@ import java.util.Map;
 @Slf4j
 public class ErrorHandler {
     @ExceptionHandler
-    public ResponseEntity<String> handleEmailNotFoundException(final EmailNotFoundException e) {
-        log.debug("EmailNotFoundException");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> handleEmailDuplicatedException(final EmailDuplicatedException e) {
-        log.debug("EmailDuplicatedException");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<String> handleIncorrectIdException(final IncorrectIdException e) {
         log.debug("IncorrectIdException");
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -89,4 +77,12 @@ public class ErrorHandler {
         log.debug("IncorrectStateException");
         return new ResponseEntity<>(Map.of("error",e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleRequestNotFoundException(final RequestNotFoundException e) {
+        log.debug("RequestNotFoundException");
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
 }
