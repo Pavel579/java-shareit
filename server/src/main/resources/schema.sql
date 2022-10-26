@@ -3,6 +3,7 @@
 --TRUNCATE TABLE items RESTART IDENTITY cascade;
 --TRUNCATE TABLE users RESTART IDENTITY cascade;
 --TRUNCATE TABLE comments RESTART IDENTITY cascade;
+drop table if exists users, items, bookings, requests, comments;
 
 create table if not exists users
 (
@@ -72,4 +73,3 @@ create table if not exists comments
     FOREIGN KEY (author_id)
         REFERENCES users (id)
 );
-

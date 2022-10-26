@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestResponseDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
-import ru.practicum.shareit.utils.Create;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -33,7 +30,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDto createItemRequest(@RequestHeader("X-Sharer-User-Id") Long id,
-                                            @Validated(Create.class) @RequestBody ItemRequestDto itemRequestDto) {
+                                            @RequestBody ItemRequestDto itemRequestDto) {
         return itemRequestService.createItemRequest(id, itemRequestDto);
     }
 
@@ -45,8 +42,8 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestResponseDto> getItemRequestsFromAnotherUsers(
             @RequestHeader("X-Sharer-User-Id") Long id,
-            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
         int page = from / size;
         final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "created"));
         return itemRequestService.getItemRequestsFromAnotherUsers(id, pageRequest);

@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.exceptions.DatesAreNotCorrectException;
 import ru.practicum.shareit.exceptions.IncorrectStateException;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -27,7 +23,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/bookings")
-@Validated
 public class BookingController {
     private final BookingService bookingService;
 
@@ -37,8 +32,8 @@ public class BookingController {
 
     @PostMapping
     public BookingResponseDto createNewBooking(@RequestHeader("X-Sharer-User-Id") Long id,
-                                       @Validated @RequestBody BookingDto bookingDto) {
-        checkDates(bookingDto);
+                                               @RequestBody BookingDto bookingDto) {
+        //checkDates(bookingDto);
         return bookingService.createNewBooking(bookingDto, id);
     }
 
@@ -53,8 +48,8 @@ public class BookingController {
     public List<BookingResponseDto> getAllBookingsByUserId(
             @RequestHeader("X-Sharer-User-Id") Long id,
             @RequestParam(required = false, defaultValue = "ALL") String state,
-            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
         int page = from / size;
         final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "start"));
         try {
@@ -75,8 +70,8 @@ public class BookingController {
     public List<BookingResponseDto> getAllBookingsOfCurrentUserItems(
             @RequestHeader("X-Sharer-User-Id") Long id,
             @RequestParam(required = false, defaultValue = "ALL") String state,
-            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
         int page = from / size;
         final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "start"));
         try {
@@ -84,12 +79,6 @@ public class BookingController {
             return bookingService.getAllBookingsOfCurrentUserItems(id, bookingState, pageRequest);
         } catch (IllegalArgumentException e) {
             throw new IncorrectStateException("Unknown state: " + state);
-        }
-    }
-
-    private void checkDates(BookingDto booking) {
-        if (!booking.getStart().isBefore(booking.getEnd())) {
-            throw new DatesAreNotCorrectException("Дата начала после даты окончания");
         }
     }
 }
