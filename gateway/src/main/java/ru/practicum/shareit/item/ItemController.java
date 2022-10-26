@@ -65,7 +65,6 @@ public class ItemController {
         return itemClient.searchItemsByNameOrDescription(id, text, from, size);
     }
 
-
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(
             @RequestHeader("X-Sharer-User-Id") Long id,
