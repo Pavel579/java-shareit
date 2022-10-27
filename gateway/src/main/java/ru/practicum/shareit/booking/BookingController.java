@@ -19,9 +19,6 @@ import ru.practicum.shareit.exceptions.IncorrectStateException;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-/**
- * TODO Sprint add-bookings.
- */
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor

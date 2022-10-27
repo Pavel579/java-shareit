@@ -8,9 +8,6 @@ import ru.practicum.shareit.utils.Create;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

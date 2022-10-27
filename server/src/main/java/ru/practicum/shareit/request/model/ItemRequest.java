@@ -15,10 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
-
 @Getter
 @Setter
 @EqualsAndHashCode

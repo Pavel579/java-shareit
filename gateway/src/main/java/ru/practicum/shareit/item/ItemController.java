@@ -20,9 +20,6 @@ import ru.practicum.shareit.utils.Update;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor

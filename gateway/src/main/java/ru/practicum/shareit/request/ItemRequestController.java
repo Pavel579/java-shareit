@@ -17,9 +17,6 @@ import ru.practicum.shareit.utils.Create;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/requests")

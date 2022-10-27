@@ -20,7 +20,6 @@ import ru.practicum.shareit.utils.Update;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Slf4j
-//@Validated
 public class UserController {
     private final UserClient userClient;
 
