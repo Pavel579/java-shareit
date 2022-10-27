@@ -33,7 +33,6 @@ public class BookingController {
     @PostMapping
     public BookingResponseDto createNewBooking(@RequestHeader("X-Sharer-User-Id") Long id,
                                                @RequestBody BookingDto bookingDto) {
-        //checkDates(bookingDto);
         return bookingService.createNewBooking(bookingDto, id);
     }
 
