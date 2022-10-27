@@ -33,7 +33,6 @@ services:
     ports:
       - "6541:5432"
     environment:
-      - TZ=Europe/Moscow
       - POSTGRES_DB=postgres
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
