@@ -67,12 +67,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleDatesAreNotCorrectException(final DatesAreNotCorrectException e) {
-        log.debug("DatesAreNotCorrectException");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<Map<String, String>> handleIncorrectStateException(final IncorrectStateException e) {
         log.debug("IncorrectStateException");
         return new ResponseEntity<>(Map.of("error",e.getMessage()), HttpStatus.BAD_REQUEST);
