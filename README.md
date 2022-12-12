@@ -1,2 +1,2 @@
 # java-shareit
-Template repository for Shareit project.
+"Share it" - приложение, позволяющее друзьям обмениваться вещами на время.
